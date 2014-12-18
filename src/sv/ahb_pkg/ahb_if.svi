@@ -1,0 +1,190 @@
+/********************************************************************
+ * Copyright (c) 2014
+ * All rights reserved.
+ *
+ * \file    ahb_if.svi
+ * \brief   
+ * \version 1.0
+ * \author  seabeam
+ * \Email   seabeam@sina.com
+ * \date    2014-10-29
+ ********************************************************************/
+
+`ifndef AHB_IF_SVI
+`define AHB_IF_SVI
+
+    `timescale 1ns/1ps
+    interface ahb_master_if (input wire HCLK);
+        logic                   HRESET_N;
+        logic [`w_HADDR-1   :0] HADDR;
+        logic [`w_HTRANS-1  :0] HTRANS;
+        logic [`w_HBURST-1  :0] HBURST;
+        logic                   HWRITE;
+        logic [`w_HSIZE-1   :0] HSIZE;
+        logic                   HSEL;
+        logic [`w_HWDATA-1  :0] HWDATA;
+        logic [`w_HRDATA-1  :0] HRDATA;
+        logic                   HREADY;
+        logic [1            :0] HRESP;
+
+        logic [3            :0] HPROT;
+        logic                   HBUSREQ; 
+        logic                   HLOCK; 
+        logic                   HGRANT;
+
+        logic [31:0]            upper_byte_lane;
+        logic [31:0]            lower_byte_lane;
+        logic [31:0]            transfer_num;
+    
+        clocking cb @(posedge HCLK);
+            input       HCLK;
+        endclocking
+        
+        modport DUT (
+            clocking    cb,
+    
+            output      HADDR,
+            output      HTRANS,
+            output      HBURST,
+            output      HWRITE,
+            output      HSIZE,
+            output      HSEL,
+            output      HWDATA,
+            output      HREADY,
+            input       HRDATA,
+            input       HRESP,
+            input       HRESET_N
+        );
+    
+        modport MON (
+            input       HRESET_N,
+            input       HADDR,
+            input       HTRANS,
+            input       HBURST,
+            input       HWRITE,
+            input       HSIZE,
+            input       HSEL,
+            input       HWDATA,
+            input       HREADY,
+            input       HRDATA,
+            input       HRESP,
+        );
+    
+        reg [31:0]  cnt;
+
+        assign transfer_num = cnt;
+        always @(posedge HCLK) begin
+            if (!HRESET_N) begin
+                cnt <= 0;
+            end
+            else if (HTRANS == 2 && HREADY === 1'b1) begin
+                cnt ++;
+            end
+        end
+    endinterface
+
+    interface ahb_slave_if (input wire HCLK);
+        logic                   HRESET_N;
+        logic [`w_HADDR-1   :0] HADDR;
+        logic [`w_HTRANS-1  :0] HTRANS;
+        logic [`w_HBURST-1  :0] HBURST;
+        logic                   HWRITE;
+        logic [`w_HSIZE-1   :0] HSIZE;
+        logic [`w_HSEL-1    :0] HSEL;
+        logic [`w_HWDATA-1  :0] HWDATA;
+        logic [`w_HRDATA-1  :0] HRDATA;
+        logic                   HREADY_I;
+        logic                   HREADY_O;
+        logic [1            :0] HRESP;
+
+        logic [3            :0] HPROT;
+        logic                   HBUSREQ; 
+        logic                   HLOCK; 
+        logic                   HGRANT;
+        logic                   HMASTLOCK;
+        logic                   HSPLIT;
+
+        logic [31:0]    transfer_num;
+    
+        clocking cb @(posedge HCLK);
+            input       HCLK;
+        endclocking
+        
+        modport DUT (
+            clocking    cb,
+    
+            input       HADDR,
+            input       HTRANS,
+            input       HBURST,
+            input       HWRITE,
+            input       HSIZE,
+            input       HSEL,
+            input       HWDATA,
+            input       HREADY_I,
+            output      HRDATA,
+            output      HREADY_O,
+            output      HRESP
+        );
+    
+        modport MON (
+            input       HRESET_N,
+            input       HADDR,
+            input       HTRANS,
+            input       HBURST,
+            input       HWRITE,
+            input       HSIZE,
+            input       HSEL,
+            input       HWDATA,
+            input       HREADY_I,
+            input       HRDATA,
+            input       HREADY_O,
+            input       HRESP
+        );
+    
+    endinterface
+
+    interface ahb_decoder_if (input wire HCLK);
+        logic                   HRESET_N;
+        logic [`w_HADDR-1   :0] HADDR_I;
+        logic [`w_HADDR-1   :0] HADDR_O;
+        logic [1            :0] HRESP_I[16];
+        logic [1            :0] HRESP_O;
+        logic [`w_HRDATA-1  :0] HRDATA_I[16];
+        logic [`w_HRDATA-1  :0] HRDATA_O;
+        logic                   HREADY_I[16];
+        logic                   HREADY_O;
+        logic [`w_HSEL-1    :0] HSEL[16];
+
+        clocking cb @(posedge HCLK);
+            input       HCLK;
+        endclocking
+        
+        modport DUT (
+            clocking    cb,
+    
+            input       HRESET_N,
+            input       HADDR_I,
+            input       HRESP_I,
+            input       HRDATA_I,
+            input       HREADY_I,
+            output      HADDR_O,
+            output      HRESP_O,
+            output      HRDATA_O,
+            output      HREADY_O,
+            output      HSEL
+        );
+    
+        modport MON (
+            input       HRESET_N,
+            input       HADDR_I,
+            input       HRESP_I,
+            input       HRDATA_I,
+            input       HREADY_I,
+            input       HADDR_O,
+            input       HRESP_O,
+            input       HRDATA_O,
+            input       HSEL
+        );
+    
+    endinterface
+`endif
