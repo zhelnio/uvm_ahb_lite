@@ -8,8 +8,8 @@
  * \author  seabeam
  * \Email   seabeam@sina.com
  * \date    2014-12-18
- ********************************************************************
- */
+ ********************************************************************/
+ 
 `ifndef AMBA_UVM_XACTION_SVH
 `define AMBA_UVM_XACTION_SVH
 
