@@ -224,6 +224,14 @@ class ahb_xaction extends amba_uvm_xaction;
     constraint c_size {
         len + busy_num + 1 == hwdata.size();
         len + busy_num + 2 == transfers.size();
+        size == SIZE8      <-> amba_size == AMBA_BYTE_1;                                                                                                               
+        size == SIZE16     <-> amba_size == AMBA_BYTE_2;  
+        size == SIZE32     <-> amba_size == AMBA_BYTE_4;  
+        size == SIZE64     <-> amba_size == AMBA_BYTE_8;  
+        size == SIZE128    <-> amba_size == AMBA_BYTE_16; 
+        size == SIZE256    <-> amba_size == AMBA_BYTE_32; 
+        size == SIZE512    <-> amba_size == AMBA_BYTE_64; 
+        size == SIZE1024   <-> amba_size == AMBA_BYTE_128;
     }
 
     constraint c_1k_boundary {
