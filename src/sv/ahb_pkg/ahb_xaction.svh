@@ -160,13 +160,13 @@ class ahb_transfer extends uvm_sequence_item;
             $sformat(convert2string, "%s\n @ %0t", convert2string, $time());
             $sformat(convert2string, "%s\n-------------------------------------------------------", convert2string);
         end
-        $sformat(convert2string, "%s\n HWRITE\t\t%s\n", convert2string, ahb_direction_to_string(direction));
+        $sformat(convert2string, "%s\n HWRITE\t\t%p\n", convert2string, direction);
         $sformat(convert2string, "%s HADDR\t\t'%hh\n", convert2string, address);
-        $sformat(convert2string, "%s HSIZE\t\t%s\n", convert2string, ahb_size_to_string(size));
-        $sformat(convert2string, "%s HBURST\t\t%s\n", convert2string, ahb_burst_to_string(burst));
-        $sformat(convert2string, "%s HTRANS\t\t%s\n", convert2string, ahb_trans_to_string(trans));
-        $sformat(convert2string, "%s HRESP\t\t%s\n", convert2string, ahb_response_to_string(response));
-        $sformat(convert2string, "%s location\t%s\n", convert2string, ahb_location_to_string(location));
+        $sformat(convert2string, "%s HSIZE\t\t%p\n", convert2string, size);
+        $sformat(convert2string, "%s HBURST\t\t%p\n", convert2string, burst);
+        $sformat(convert2string, "%s HTRANS\t\t%p\n", convert2string, trans);
+        $sformat(convert2string, "%s HRESP\t\t%p\n", convert2string, response);
+        $sformat(convert2string, "%s location\t%p\n", convert2string, location);
         $sformat(convert2string, "%s-------------------------------------------------------", convert2string);
     endfunction : convert2string
 endclass : ahb_transfer
@@ -195,6 +195,9 @@ class ahb_xaction extends amba_uvm_xaction;
          bit                use_busy_end    = 1'b0;
          ahb_agent_type_e   agent_type;
          string             name;
+
+         time               start_time;
+         time               end_time;
 
     `uvm_object_utils(ahb_xaction)
 
@@ -291,6 +294,8 @@ function void ahb_xaction::do_copy (uvm_object rhs);
     upper_byte_lane = rhs_.upper_byte_lane;
     lower_byte_lane = rhs_.lower_byte_lane;
 
+    start_time  = rhs_.start_time;
+    end_time    = rhs_.end_time;    
 endfunction : do_copy
 
 function void ahb_xaction::do_print (uvm_printer printer);
