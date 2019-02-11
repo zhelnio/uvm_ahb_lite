@@ -7,7 +7,7 @@ import optparse
  
 def create_commond(case_name):
     reach = 0 
-    commond = 'irun -uvm -uvmhome $UVM_HOME -uvmnocdnsextra -sv -f ../list/bench.f -64bit'
+    commond = 'irun -uvm -uvmhome $UVM_HOME -uvmnocdnsextra -sv -f ../list/bench.f -64bit -timescale 1ns/10ps'
     for arg in sys.argv:
         if re.search('^-?gui$', arg) != None:
             commond += ' -gui -debug'

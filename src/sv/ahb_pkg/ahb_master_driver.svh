@@ -127,7 +127,7 @@ task ahb_master_driver::drive_bus ();
     ahb_port.DUT.HBURST     <=          'h0;
     ahb_port.DUT.HWRITE     <= 1        'b0;
     ahb_port.DUT.HSIZE      <=          'h0;
-    ahb_port.DUT.HBUSREQ    <= 1        'b0;
+//  ahb_port.DUT.HBUSREQ    <= 1        'b0;
     out_driver_ap.write(req);
     repeat (req.delay) @ ahb_port.cb;
 endtask : drive_bus

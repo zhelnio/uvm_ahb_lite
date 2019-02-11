@@ -70,3 +70,4 @@ module top;
     always #4   HCLK = ~HCLK;
 endmodule : top
 
+`endif
